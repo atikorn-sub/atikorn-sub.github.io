@@ -196,11 +196,11 @@ const RESUME = {
   -------------------------------------------------------- */
   expectations: {
     show: true,
-    salaryMin: null,        // เช่น 35000
-    salaryMax: null,        // เช่น 45000
+    salaryMin: 20000,        // เช่น 35000
+    salaryMax: 30000,        // เช่น 45000
     negotiable: true,       // true = แสดงป้าย "ต่อรองได้"
-    workType: null,         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
-    availableFrom: null,    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
+    workType: { en: "Hybrid / Work from home", th: "Hybrid / ทำงานที่บ้าน" },         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
+    availableFrom: { en: "Within 30 days", th: "ภายใน 30 วัน" },    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
     roles: ["Full-stack Developer", "Backend Developer", "SQL / K2 Developer"],
     note: null,             // เช่น { en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล" }
   },
