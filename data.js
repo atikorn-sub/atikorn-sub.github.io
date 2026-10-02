@@ -9,17 +9,27 @@ const RESUME = {
   ui: {
     en: {
       navAbout: "About", navSkills: "Skills", navExperience: "Experience",
-      navProjects: "Projects", navEducation: "Education",
-      greeting: "Hello, I'm", contactMe: "Contact me",
+      navProjects: "Projects", navEducation: "Education", navExpect: "Expectations",
+      contactMe: "Contact me", openToWork: "Open to new opportunities",
       present: "Present",
-      footer: "Designed & built with HTML, CSS and JavaScript · Hosted on GitHub Pages",
+      footer: "Built with HTML, CSS & JavaScript · Hosted on GitHub Pages",
+      // ตาราง Expectations
+      salary: "expected_salary", workType: "work_type", availableFrom: "available_from",
+      roles: "interested_roles", note: "note",
+      perMonth: "/ month", negotiable: "negotiable", tbd: "TBD",
+      rowsAffected: (n) => `(${n} rows affected)`,
     },
     th: {
       navAbout: "เกี่ยวกับฉัน", navSkills: "ทักษะ", navExperience: "ประสบการณ์",
-      navProjects: "ผลงาน", navEducation: "การศึกษา",
-      greeting: "สวัสดี ฉันชื่อ", contactMe: "ติดต่อฉัน",
+      navProjects: "ผลงาน", navEducation: "การศึกษา", navExpect: "สิ่งที่คาดหวัง",
+      contactMe: "ติดต่อฉัน", openToWork: "พร้อมรับโอกาสใหม่ ๆ",
       present: "ปัจจุบัน",
-      footer: "ออกแบบและพัฒนาด้วย HTML, CSS และ JavaScript · เผยแพร่ด้วย GitHub Pages",
+      footer: "พัฒนาด้วย HTML, CSS และ JavaScript · เผยแพร่ด้วย GitHub Pages",
+      // ตาราง Expectations
+      salary: "เงินเดือนที่คาดหวัง", workType: "รูปแบบการทำงาน", availableFrom: "เริ่มงานได้",
+      roles: "ตำแหน่งที่สนใจ", note: "หมายเหตุ",
+      perMonth: "บาท / เดือน", negotiable: "ต่อรองได้", tbd: "แจ้งภายหลัง",
+      rowsAffected: (n) => `(${n} rows affected)`,
     },
   },
 
@@ -63,13 +73,13 @@ const RESUME = {
 
   /* ---------- ทักษะ (ชื่อเทคโนโลยีใช้ภาษาอังกฤษทั้งสองภาษา) ---------- */
   skills: [
-    { group: { en: "Database", th: "ฐานข้อมูล" },
+    { key: "database", group: { en: "Database", th: "ฐานข้อมูล" },
       items: ["Microsoft SQL Server", "T-SQL", "Stored Procedures", "Views", "Query Optimization", "MySQL"] },
-    { group: { en: "Workflow & Low-code", th: "Workflow & Low-code" },
+    { key: "workflow", group: { en: "Workflow & Low-code", th: "Workflow & Low-code" },
       items: ["K2", "BPA / RPA", "Power Apps (Power Fx)", "Power BI", "Microsoft Power Platform"] },
-    { group: { en: "Web Development", th: "พัฒนาเว็บ" },
+    { key: "web", group: { en: "Web Development", th: "พัฒนาเว็บ" },
       items: ["HTML", "CSS", "JavaScript", "React", "REST API", "Prisma ORM"] },
-    { group: { en: "Other", th: "อื่น ๆ" },
+    { key: "other", group: { en: "Other", th: "อื่น ๆ" },
       items: ["Microsoft 365", "Active Directory", "Graphic Design", "Video Editing", "Presenting"] },
   ],
 
@@ -132,6 +142,7 @@ const RESUME = {
   /* ---------- ผลงาน / โปรเจค ---------- */
   projects: [
     {
+      file: "ecommerce.jsx",
       title: { en: "IT E-Commerce Website", th: "เว็บไซต์ E-Commerce สินค้า IT" },
       label: { en: "Capstone · 2024", th: "โครงงานจบ · 2567" },
       desc: {
@@ -142,6 +153,7 @@ const RESUME = {
       link: null, // ถ้าเอาโค้ดขึ้น GitHub แล้ว ใส่ลิงก์ตรงนี้ เช่น "https://github.com/atikorn-sub/ecommerce"
     },
     {
+      file: "helpdesk.app",
       title: { en: "IT Helpdesk System", th: "ระบบ IT Helpdesk" },
       label: { en: "Internship · F-TECH", th: "ฝึกงาน · F-TECH" },
       desc: {
@@ -152,6 +164,7 @@ const RESUME = {
       link: null,
     },
     {
+      file: "server-room.pbix",
       title: { en: "Server Room Monitoring", th: "ระบบตรวจสอบห้อง Server" },
       label: { en: "Internship · F-TECH", th: "ฝึกงาน · F-TECH" },
       desc: {
@@ -162,6 +175,7 @@ const RESUME = {
       link: null,
     },
     {
+      file: "index.html",
       title: { en: "This Resume Website", th: "เว็บไซต์ Resume นี้" },
       label: { en: "Personal · 2026", th: "ส่วนตัว · 2569" },
       desc: {
@@ -172,6 +186,24 @@ const RESUME = {
       link: "https://github.com/atikorn-sub/atikorn-sub.github.io",
     },
   ],
+
+  /* ---------- สิ่งที่คาดหวัง (Expectations) ----------
+     ✏️ กรอกข้อมูลเองตรงนี้
+     - show: false  = ซ่อนทั้ง section นี้ (ไม่ต้องลบโค้ด)
+     - salaryMin / salaryMax ใส่เป็นตัวเลขไม่ต้องมี , เช่น 35000
+       ถ้าใส่ null = แสดงว่า "แจ้งภายหลัง"
+     - ช่องไหนใส่ null จะแสดงว่า "แจ้งภายหลัง"
+  -------------------------------------------------------- */
+  expectations: {
+    show: true,
+    salaryMin: null,        // เช่น 35000
+    salaryMax: null,        // เช่น 45000
+    negotiable: true,       // true = แสดงป้าย "ต่อรองได้"
+    workType: null,         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
+    availableFrom: null,    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
+    roles: ["Full-stack Developer", "Backend Developer", "SQL / K2 Developer"],
+    note: null,             // เช่น { en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล" }
+  },
 
   /* ---------- การศึกษา ---------- */
   education: [
