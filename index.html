@@ -40,6 +40,7 @@
 
     <!-- ===== Hero: หน้าต่าง Terminal ===== -->
     <section class="hero">
+      <div class="hero-main">
       <div class="terminal hero-term">
         <div class="term-bar">
           <span class="dots"><i></i><i></i><i></i></span>
@@ -53,6 +54,26 @@
           <p class="cmdline"><span class="ps1">atikorn@portfolio</span>:<span class="path">~</span>$ echo $MISSION</p>
           <p class="tagline"><span id="tagline"></span><span class="cursor" aria-hidden="true">▋</span></p>
         </div>
+      </div>
+
+      <!-- รูปโปรไฟล์: วางไฟล์ชื่อ profile.jpg ไว้โฟลเดอร์เดียวกับ index.html (ถ้าไม่มีไฟล์ จะแสดงกรอบ Avatar สำรองแทน) -->
+      <figure class="avatar" id="avatar">
+        <div class="term-bar">
+          <span class="dots"><i></i><i></i><i></i></span>
+          <span class="term-title">profile.jpg</span>
+        </div>
+        <button class="avatar-btn" id="avatarBtn" type="button" aria-label="Zoom photo">
+          <img src="profile.jpg" alt="Atikorn Subsuieng" width="240" height="300"
+               onerror="this.closest('.avatar').classList.add('empty')">
+        </button>
+        <div class="avatar-ph" aria-hidden="true">
+          <svg viewBox="0 0 100 125" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">
+            <circle cx="50" cy="48" r="20" fill="currentColor"/>
+            <path d="M12 125c0-26 17-42 38-42s38 16 38 42z" fill="currentColor"/>
+          </svg>
+          <span>// add profile.jpg</span>
+        </div>
+      </figure>
       </div>
 
       <div class="hero-links">
@@ -149,6 +170,12 @@
     <span>UTF-8</span>
     <span>© <span id="year"></span> Atikorn Subsuieng</span>
   </footer>
+
+  <!-- ภาพขยายเมื่อกดที่รูปโปรไฟล์ (กดที่ว่าง / ปุ่ม Esc เพื่อปิด) -->
+  <dialog id="lightbox" class="lightbox" aria-label="Photo">
+    <img id="lightboxImg" alt="Atikorn Subsuieng">
+    <button id="lightboxClose" class="lightbox-close" type="button" aria-label="Close">✕</button>
+  </dialog>
 
   <!-- ข้อมูล Resume อยู่ใน data.js / โค้ดแสดงผลอยู่ใน script.js -->
   <script src="data.js"></script>

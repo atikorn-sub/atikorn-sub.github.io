@@ -189,6 +189,14 @@ $("themeBtn").addEventListener("click", () => {
   store.set("theme", next);
 });
 
+/* ---------- กดรูปโปรไฟล์เพื่อซูม ---------- */
+const lightbox = $("lightbox");
+$("avatarBtn").addEventListener("click", () => {
+  $("lightboxImg").src = $("avatarBtn").querySelector("img").src;
+  lightbox.showModal();
+});
+lightbox.addEventListener("click", () => lightbox.close()); // กดตรงไหนก็ปิด (Esc ปิดได้อยู่แล้ว)
+
 /* ---------- Animation ตอนเลื่อนจอ ---------- */
 if (!reduceMotion && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => {
