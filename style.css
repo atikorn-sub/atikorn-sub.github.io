@@ -616,3 +616,19 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
 #resumeDialog .contact-list { margin-top: 16px; }
 .resume-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
 .resume-actions .btn { font-size: .85rem; padding: 9px 16px; }
+
+/* ---------- สไลด์โชว์แบบเฟด: ภาพซ้อนกัน ค่อย ๆ จางเข้า-ออก + ซูมช้า ๆ นิดหน่อย (ตั้งใน data.js: slideshow.effect = "fade") ---------- */
+.carousel.fade { --fade: 1.4s; }
+.carousel.fade .car-track { display: block; position: relative; transform: none; transition: none; }
+.carousel.fade .car-slide {
+  position: absolute; inset: 0; width: 100%; height: 100%; flex: none;
+  opacity: 0; z-index: 0; transition: opacity var(--fade) ease-in-out;
+}
+.carousel.fade .car-slide.active { opacity: 1; z-index: 1; }
+/* ซูมเข้าช้า ๆ ตอนรูปแสดงอยู่ แล้วรีเซ็ตกลับหลังจางหายหมดแล้ว (หน่วงเวลาเท่าเวลาเฟด จะไม่เห็นรอยกระตุก) */
+.carousel.fade .car-slide .gal-img { transform: scale(1); transition: transform 0s linear var(--fade); }
+.carousel.fade .car-slide.active .gal-img { transform: scale(1.07); transition: transform 7s ease-out; }
+@media (prefers-reduced-motion: reduce) {
+  .carousel.fade .car-slide { transition-duration: .01s; }
+  .carousel.fade .car-slide.active .gal-img { transform: none; transition: none; }
+}

@@ -294,12 +294,15 @@ const RESUME = {
         en: "Won first place for the IT Helpdesk System, recognized for excellence in Science and Technology at Matching JOB & CWIE Day.",
         th: "ได้รับรางวัลชนะเลิศอันดับ 1 จากระบบ IT Helpdesk ด้านวิทยาศาสตร์และเทคโนโลยี ในงาน Matching JOB & CWIE Day",
       },
-      // รางวัลเด่น: ใส่ 2 รูปขึ้นไป = สไลด์โชว์เลื่อนอัตโนมัติ (ทุก 3 วิ) / 1 รูป = รูปนิ่ง / ไม่ใส่ = ไอคอน
+      // รางวัลเด่น: ใส่ 2 รูปขึ้นไป = สไลด์โชว์เลื่อนอัตโนมัติ (ค่าเริ่มต้นทุก 3 วิ) / 1 รูป = รูปนิ่ง / ไม่ใส่ = ไอคอน
       images: [
         "images/achievements/cwie-1st-1.jpg",
         "images/achievements/cwie-1st-2.jpg",
         "images/achievements/cwie-1st-3.jpg",
       ],
+      // ตั้งค่าสไลด์โชว์เฉพาะกล่องนี้: delay = เวลาต่อรูป (มิลลิวินาที, 4500 = 4.5 วิ)
+      // effect: "fade" = ภาพค่อย ๆ จางเข้า-ออกแบบซูมนิด ๆ / "slide" = เลื่อนซ้าย-ขวา (ค่าเริ่มต้น)
+      slideshow: { delay: 4500, effect: "fade" },
     },
     {
       icon: "🎖️", top: true, year: { en: "2025", th: "2568" },

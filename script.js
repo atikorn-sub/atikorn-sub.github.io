@@ -100,18 +100,22 @@ function galleryHtml(list, name) {
 }
 
 /* ---------- สไลด์โชว์ (ใช้กับการ์ดรางวัลเด่นที่มี 2 รูปขึ้นไป) ----------
-   เลื่อนอัตโนมัติทุก 3 วินาทีแบบวนลูป / หยุดเมื่อเอาเมาส์ชี้หรือโฟกัส / มีลูกศร, จุดบอกตำแหน่ง, ปัดนิ้วบนมือถือ */
+   เลื่อนอัตโนมัติแบบวนลูป / หยุดเมื่อเอาเมาส์ชี้หรือโฟกัส / มีลูกศร, จุดบอกตำแหน่ง, ปัดนิ้วบนมือถือ
+   ค่าเริ่มต้นของทุกกล่อง = เลื่อนทุก 3 วินาทีแบบสไลด์ — ตั้งค่าเฉพาะกล่องได้ที่ `slideshow` ของรางวัลนั้นใน data.js:
+     slideshow: { delay: 4500, effect: "fade" }   // delay = มิลลิวินาที, effect = "slide" (ค่าเริ่มต้น) หรือ "fade" (ภาพค่อย ๆ จางเข้า-ออก) */
 const CAROUSEL_DELAY = 3000;
 const carouselTimers = [];
 
-function carouselHtml(list, name) {
+function carouselHtml(list, name, opts = {}) {
   const id = registerGallery(list, name);
   const items = galleries[id].items;
+  const delay = Number(opts.delay) || CAROUSEL_DELAY;
+  const fade = opts.effect === "fade";
   return `
-    <div class="carousel" data-count="${items.length}">
+    <div class="carousel${fade ? " fade" : ""}" data-count="${items.length}" data-delay="${delay}">
       <div class="car-track">${items
         .map((it, i) => `
-          <button class="car-slide gal-item" type="button" data-g="${id}" data-i="${i}" aria-label="${esc(name)} ${i + 1}/${items.length}">
+          <button class="car-slide gal-item${i ? "" : " active"}" type="button" data-g="${id}" data-i="${i}" aria-label="${esc(name)} ${i + 1}/${items.length}">
             <img class="gal-img" src="${esc(it.src)}" alt="${esc(it.caption ? t(it.caption) : name)}"${i ? ' loading="lazy"' : ""}>
           </button>`)
         .join("")}</div>
@@ -128,21 +132,25 @@ function initCarousels() {
   document.querySelectorAll(".carousel").forEach((el) => {
     const n = Number(el.dataset.count);
     const track = el.querySelector(".car-track");
+    const slides = el.querySelectorAll(".car-slide");
     const dots = el.querySelectorAll(".car-dot");
+    const fade = el.classList.contains("fade");
+    const delay = Number(el.dataset.delay) || CAROUSEL_DELAY;
     let cur = 0;
     let timer = null;
     let paused = false;
 
     const go = (i) => {
       cur = (i + n) % n;
-      track.style.transform = `translateX(${-cur * 100}%)`;
+      if (fade) slides.forEach((s, k) => s.classList.toggle("active", k === cur)); // เฟด: สลับรูปที่ซ้อนกัน
+      else track.style.transform = `translateX(${-cur * 100}%)`;                  // สไลด์: เลื่อนแถบรูป
       dots.forEach((d, k) => d.classList.toggle("active", k === cur));
     };
     const stop = () => { clearInterval(timer); timer = null; };
     const start = () => {
       stop();
       if (reduceMotion || paused) return;
-      timer = setInterval(() => go(cur + 1), CAROUSEL_DELAY);
+      timer = setInterval(() => go(cur + 1), delay);
       carouselTimers.push(timer);
     };
 
@@ -308,7 +316,7 @@ function render() {
       <article class="achv-feature${i % 2 ? " alt" : ""}">
         <div class="achv-media">${
           !hasImg(a) ? art(a)
-          : a.images.length > 1 ? carouselHtml(a.images, t(a.title))
+          : a.images.length > 1 ? carouselHtml(a.images, t(a.title), a.slideshow)
           : galleryHtml(a.images, t(a.title))
         }</div>
         <div class="achv-text">
