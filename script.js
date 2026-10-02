@@ -224,7 +224,7 @@ if (!reduceMotion && "IntersectionObserver" in window) {
 }
 
 /* ---------- เริ่มทำงานเมื่อเปิดหน้า ---------- */
-lang = store.get("lang") || (navigator.language.startsWith("th") ? "th" : "en");
+lang = store.get("lang") || "th"; // เริ่มที่ภาษาไทย (ถ้าผู้ชมเคยกดสลับภาษา จะจำค่าที่เลือกไว้)
 document.documentElement.dataset.theme = store.get("theme") || "dark"; // ธีม Terminal เริ่มที่โหมดมืด
 $("year").textContent = new Date().getFullYear();
 render();
