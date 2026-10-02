@@ -368,6 +368,12 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
   font-size: 1rem; color: #fff; background: rgba(0, 0, 0, .55);
   border-radius: 8px; opacity: 0; transition: opacity .2s;
 }
+.avatar-btn { overflow: hidden; }
+.avatar-btn img { transition: transform .35s ease; transform-origin: var(--zx, 50%) var(--zy, 28%); }
+@media (hover: hover) and (prefers-reduced-motion: no-preference) {
+  .avatar-btn:hover img { transform: scale(2.2); transition: transform .35s ease; }
+  .avatar-btn.tracking img { transition: transform .35s ease, transform-origin .12s ease-out; }
+}
 .avatar-btn:hover::after, .avatar-btn:focus-visible::after { opacity: 1; }
 .avatar-btn:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
 .avatar img { display: block; width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 50% 28%; }

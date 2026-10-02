@@ -197,6 +197,20 @@ $("avatarBtn").addEventListener("click", () => {
 });
 lightbox.addEventListener("click", () => lightbox.close()); // กดตรงไหนก็ปิด (Esc ปิดได้อยู่แล้ว)
 
+// เอาเมาส์ชี้ที่รูปแล้วซูมเข้า โดยจุดที่ซูมจะเลื่อนตามเมาส์
+const avatarBtn = $("avatarBtn");
+avatarBtn.addEventListener("mousemove", (e) => {
+  const r = avatarBtn.getBoundingClientRect();
+  avatarBtn.style.setProperty("--zx", ((e.clientX - r.left) / r.width) * 100 + "%");
+  avatarBtn.style.setProperty("--zy", ((e.clientY - r.top) / r.height) * 100 + "%");
+  avatarBtn.classList.add("tracking");
+});
+avatarBtn.addEventListener("mouseleave", () => {
+  avatarBtn.classList.remove("tracking");
+  avatarBtn.style.removeProperty("--zx");
+  avatarBtn.style.removeProperty("--zy");
+});
+
 /* ---------- Animation ตอนเลื่อนจอ ---------- */
 if (!reduceMotion && "IntersectionObserver" in window) {
   const io = new IntersectionObserver((entries) => {
