@@ -91,17 +91,21 @@ const RESUME = {
       role: "Junior Software Developer (K2)",
       bullets: {
         en: [
-          "Develop and implement business solutions on the K2 platform with BPA & RPA automation workflows.",
-          "Create, optimize and maintain complex SQL Server stored procedures, views and queries for large-scale financial operations.",
-          "Contributed to a car auction system and the NGERN HAI JAI lending & litigation project.",
+          "Build enterprise systems for NGERN HAI JAI Co., Ltd. (เงินให้ใจ), a lending company in the Kasikornbank (KBank) group — software that supports real loan and debt-collection operations.",
+          "Design and deliver end-to-end workflow automation on the K2 platform (BPA), turning multi-step lending and litigation processes into streamlined, trackable digital workflows.",
+          "Automate repetitive back-office tasks with K2 RPA, freeing teams from manual, error-prone work.",
+          "Write and tune complex SQL Server stored procedures, views and queries that keep large-scale financial data fast, accurate and reliable.",
+          "Contributed to a car auction system and the NGERN HAI JAI lending & litigation project, working with business teams from requirements through delivery.",
         ],
         th: [
-          "พัฒนาและนำโซลูชันไปใช้งานบนแพลตฟอร์ม K2 ด้วย BPA และ RPA Automation Workflow",
-          "สร้าง ปรับปรุงประสิทธิภาพ และดูแล Stored Procedure, View และ Query บน SQL Server สำหรับงานการเงินที่มีข้อมูลขนาดใหญ่",
-          "ร่วมพัฒนาระบบประมูลรถยนต์ และโครงการสินเชื่อ/ติดตามหนี้ NGERN HAI JAI",
+          "พัฒนาระบบระดับองค์กรให้บริษัท เงินให้ใจ จำกัด (NGERN HAI JAI) บริษัทสินเชื่อในเครือธนาคารกสิกรไทย เป็นซอฟต์แวร์ที่รองรับงานสินเชื่อและงานติดตามหนี้จริง",
+          "ออกแบบและพัฒนา Workflow Automation แบบ End-to-end บนแพลตฟอร์ม K2 (BPA) เปลี่ยนกระบวนการสินเชื่อและงานดำเนินคดีที่มีหลายขั้นตอนให้เป็นระบบดิจิทัลที่ติดตามสถานะได้",
+          "ใช้ K2 RPA ทำงานซ้ำ ๆ ในหลังบ้านแบบอัตโนมัติ ลดงานมือที่เสี่ยงต่อความผิดพลาด",
+          "เขียนและปรับจูน Stored Procedure, View และ Query บน SQL Server ที่ซับซ้อน ให้ข้อมูลการเงินปริมาณมากทำงานได้เร็ว ถูกต้อง และเชื่อถือได้",
+          "ร่วมพัฒนาระบบประมูลรถยนต์ และโครงการสินเชื่อ/ติดตามหนี้ NGERN HAI JAI ทำงานร่วมกับฝ่ายธุรกิจตั้งแต่เก็บความต้องการจนส่งมอบ",
         ],
       },
-      tags: ["K2", "SQL Server", "BPA", "RPA"],
+      tags: ["K2", "SQL Server", "BPA", "RPA", "Financial Systems", "Stored Procedures"],
     },
     {
       start: { en: "2024", th: "2567" }, end: { en: "2024", th: "2567" },
@@ -120,6 +124,26 @@ const RESUME = {
         ],
       },
       tags: ["Power Apps", "Power BI", "Active Directory"],
+    },
+    {
+      start: { en: "2024", th: "2567" }, end: { en: "2024", th: "2567" },
+      company: { en: "Rajamangala University of Technology Suvarnabhumi", th: "มหาวิทยาลัยเทคโนโลยีราชมงคลสุวรรณภูมิ" },
+      role: { en: "Full-stack Developer · Capstone Project", th: "Full-stack Developer · โครงงานจบ" },
+      bullets: {
+        en: [
+          "Co-developed AP Ecommerce, a full-stack online store for IT products, in a two-person team.",
+          "Built the React (Vite) storefront with product search, category and price-range filters, pagination, a shopping cart and sign-up / login.",
+          "Designed the RESTful API for authentication, products, orders and users, with a MySQL database managed through Prisma ORM.",
+          "Deployed the application to production on Vercel.",
+        ],
+        th: [
+          "ร่วมพัฒนา AP Ecommerce ร้านค้าออนไลน์สินค้า IT แบบ Full-stack ในทีม 2 คน",
+          "พัฒนาหน้าร้านด้วย React (Vite) มีค้นหาสินค้า กรองตามหมวดหมู่และช่วงราคา แบ่งหน้า ตะกร้าสินค้า และสมัครสมาชิก/เข้าสู่ระบบ",
+          "ออกแบบ RESTful API สำหรับ Authentication, สินค้า, คำสั่งซื้อ และผู้ใช้ พร้อมฐานข้อมูล MySQL ที่จัดการผ่าน Prisma ORM",
+          "นำแอปพลิเคชันขึ้นใช้งานจริงบน Vercel",
+        ],
+      },
+      tags: ["React", "Vite", "REST API", "Prisma", "MySQL", "Vercel"],
     },
     {
       start: { en: "2021", th: "2564" }, end: { en: "2024", th: "2567" },
@@ -146,10 +170,10 @@ const RESUME = {
       title: { en: "IT E-Commerce Website", th: "เว็บไซต์ E-Commerce สินค้า IT" },
       label: { en: "Capstone · 2024", th: "โครงงานจบ · 2567" },
       desc: {
-        en: "Full-stack online store for IT products. RESTful API for authentication, products, orders and users, backed by MySQL through Prisma ORM.",
-        th: "ร้านค้าออนไลน์สินค้า IT แบบ Full-stack มี RESTful API สำหรับ Authentication, สินค้า, คำสั่งซื้อ และผู้ใช้ เชื่อมต่อ MySQL ผ่าน Prisma ORM",
+        en: "Capstone built as a two-person team: a full-stack online store for IT products. A React (Vite) storefront with product search, category and price-range filters, pagination, a shopping cart and sign-up / login, backed by a RESTful API for authentication, products, orders and users on MySQL via Prisma ORM. Deployed on Vercel.",
+        th: "โครงงานจบที่พัฒนาร่วมกันเป็นทีม 2 คน: ร้านค้าออนไลน์สินค้า IT แบบ Full-stack หน้าร้านด้วย React (Vite) มีค้นหาสินค้า กรองตามหมวดหมู่และช่วงราคา แบ่งหน้า ตะกร้าสินค้า และสมัครสมาชิก/เข้าสู่ระบบ เชื่อมกับ RESTful API สำหรับ Authentication, สินค้า, คำสั่งซื้อ และผู้ใช้ บน MySQL ผ่าน Prisma ORM เผยแพร่บน Vercel",
       },
-      tags: ["React", "REST API", "Prisma", "MySQL"],
+      tags: ["React", "Vite", "REST API", "Prisma", "MySQL", "Vercel"],
       link: null, // ถ้าเอาโค้ดขึ้น GitHub แล้ว ใส่ลิงก์ตรงนี้ เช่น "https://github.com/atikorn-sub/ecommerce"
     },
     {
