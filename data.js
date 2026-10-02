@@ -174,7 +174,7 @@ const RESUME = {
         th: "โครงงานจบที่พัฒนาร่วมกันเป็นทีม 2 คน: ร้านค้าออนไลน์สินค้า IT แบบ Full-stack หน้าร้านด้วย React (Vite) มีค้นหาสินค้า กรองตามหมวดหมู่และช่วงราคา แบ่งหน้า ตะกร้าสินค้า และสมัครสมาชิก/เข้าสู่ระบบ เชื่อมกับ RESTful API สำหรับ Authentication, สินค้า, คำสั่งซื้อ และผู้ใช้ บน MySQL ผ่าน Prisma ORM เผยแพร่บน Vercel",
       },
       tags: ["React", "Vite", "REST API", "Prisma", "MySQL", "Vercel"],
-      link: null, // ถ้าเอาโค้ดขึ้น GitHub แล้ว ใส่ลิงก์ตรงนี้ เช่น "https://github.com/atikorn-sub/ecommerce"
+      link: "https://ap-ecommerce.vercel.app/",
     },
     {
       file: "helpdesk.app",
