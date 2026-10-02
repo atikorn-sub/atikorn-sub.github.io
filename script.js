@@ -172,6 +172,19 @@ function render() {
   eduLines.push(S.p("]"));
   $("eduCode").innerHTML = codeLines(eduLines);
 
+  /* Contact → รายการช่องทางติดต่อในหน้าต่าง "ติดต่อฉัน" */
+  $("contactList").innerHTML = RESUME.contact
+    .map((c, i) => `
+      <li style="--i:${i}">
+        <span class="c-key">${esc(c.key)}</span>
+        <span class="c-val">${c.copy ? `<a href="${esc(c.href)}">${esc(c.value)}</a>` : esc(c.value)}</span>
+        ${c.copy
+          ? `<button class="c-btn" type="button" data-copy="${esc(c.value)}" data-href="${esc(c.href)}">${esc(ui.copy)}</button>`
+          : `<a class="c-btn" href="${esc(c.href)}" target="_blank" rel="noopener">${esc(ui.open)} ↗</a>`}
+      </li>`)
+    .join("");
+  $("contactClose").setAttribute("aria-label", ui.close);
+
   $("langBtn").textContent = lang === "en" ? "ไทย" : "EN";
 }
 
@@ -209,6 +222,29 @@ avatarBtn.addEventListener("mouseleave", () => {
   avatarBtn.classList.remove("tracking");
   avatarBtn.style.removeProperty("--zx");
   avatarBtn.style.removeProperty("--zy");
+});
+
+/* ---------- ปุ่ม "ติดต่อฉัน" → เปิดหน้าต่างช่องทางติดต่อ ---------- */
+const contactDialog = $("contactDialog");
+$("contactBtn").addEventListener("click", (e) => {
+  e.preventDefault(); // ถ้า JS ไม่ทำงาน ปุ่มจะยังเปิดโปรแกรมอีเมลตามปกติ (mailto)
+  contactDialog.showModal();
+});
+$("contactClose").addEventListener("click", () => contactDialog.close());
+contactDialog.addEventListener("click", (e) => { if (e.target === contactDialog) contactDialog.close(); }); // กดพื้นหลังเพื่อปิด
+
+// ปุ่มคัดลอก (ใช้ event delegation เพราะรายการถูกสร้างใหม่ทุกครั้งที่สลับภาษา)
+$("contactList").addEventListener("click", async (e) => {
+  const btn = e.target.closest("[data-copy]");
+  if (!btn) return;
+  try {
+    await navigator.clipboard.writeText(btn.dataset.copy);
+    btn.textContent = RESUME.ui[lang].copied;
+    btn.classList.add("done");
+    setTimeout(() => { btn.textContent = RESUME.ui[lang].copy; btn.classList.remove("done"); }, 1600);
+  } catch {
+    location.href = btn.dataset.href; // คัดลอกไม่ได้ → เปิดโปรแกรมอีเมล/โทรศัพท์แทน
+  }
 });
 
 /* ---------- Animation ตอนเลื่อนจอ ---------- */

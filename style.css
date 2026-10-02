@@ -409,3 +409,48 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
   background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .25); border-radius: 50%;
 }
 .lightbox-close:hover { background: rgba(255, 255, 255, .22); }
+
+/* ---------- หน้าต่างช่องทางติดต่อ ---------- */
+.contact {
+  width: min(520px, calc(100vw - 32px)); padding: 0; border: 0; background: none;
+  color: var(--text); overflow: visible;
+}
+.contact::backdrop { background: rgba(5, 8, 12, .7); backdrop-filter: blur(5px); }
+.contact[open] { animation: pop .22s ease-out; }
+.contact .terminal { box-shadow: var(--shadow), var(--glow); }
+.contact .term-bar { position: relative; }
+.contact-x {
+  margin-left: auto; width: 26px; height: 26px; cursor: pointer;
+  color: var(--muted); background: none; border: 1px solid var(--border); border-radius: 6px;
+}
+.contact-x:hover { color: var(--green); border-color: var(--green); }
+.contact-list { list-style: none; margin: 16px 0 6px; padding: 0; }
+.contact-list li {
+  display: grid; grid-template-columns: 72px 1fr auto; align-items: center; gap: 12px;
+  padding: 11px 0; border-top: 1px solid var(--border);
+  opacity: 0; animation: lineIn .35s ease-out forwards; animation-delay: calc(.25s + var(--i) * .12s);
+}
+.c-key { color: var(--amber); font-size: .85rem; }
+.c-val { font-size: .9rem; word-break: break-all; }
+.c-btn {
+  font-family: var(--mono); font-size: .76rem; cursor: pointer; white-space: nowrap;
+  padding: 5px 12px; color: var(--text); background: var(--surface-2);
+  border: 1px solid var(--border); border-radius: 6px; transition: border-color .2s, color .2s;
+}
+.c-btn:hover { border-color: var(--green); color: var(--green); }
+.c-btn.done { background: var(--green); border-color: var(--green); color: var(--on-accent); }
+.contact-status {
+  display: flex; align-items: center; gap: 8px; margin: 14px 0 0; padding-top: 14px;
+  border-top: 1px solid var(--border); font-size: .8rem; color: var(--muted);
+}
+@keyframes pop { from { opacity: 0; transform: translateY(10px) scale(.98); } }
+@keyframes lineIn { from { opacity: 0; transform: translateX(-6px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) {
+  .contact[open], .contact-list li { animation: none; opacity: 1; }
+}
+@media (max-width: 480px) {
+  .contact-list li { grid-template-columns: 1fr auto; }
+  .c-key { grid-column: 1 / -1; margin-bottom: -6px; }
+}
+.c-val a { transition: color .2s; }
+.c-val a:hover { color: var(--green); }

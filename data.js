@@ -17,6 +17,7 @@ const RESUME = {
       salary: "expected_salary", workType: "work_type", availableFrom: "available_from",
       roles: "interested_roles", note: "note",
       perMonth: "/ month", negotiable: "negotiable", tbd: "TBD",
+      copy: "Copy", copied: "Copied ✓", open: "Open", close: "Close",
       rowsAffected: (n) => `(${n} rows affected)`,
     },
     th: {
@@ -29,6 +30,7 @@ const RESUME = {
       salary: "เงินเดือนที่คาดหวัง", workType: "รูปแบบการทำงาน", availableFrom: "เริ่มงานได้",
       roles: "ตำแหน่งที่สนใจ", note: "หมายเหตุ",
       perMonth: "บาท / เดือน", negotiable: "ต่อรองได้", tbd: "แจ้งภายหลัง",
+      copy: "คัดลอก", copied: "คัดลอกแล้ว ✓", open: "เปิด", close: "ปิด",
       rowsAffected: (n) => `(${n} rows affected)`,
     },
   },
@@ -228,6 +230,16 @@ const RESUME = {
     roles: ["Full-stack Developer", "Backend Developer", "SQL / K2 Developer"],
     note: {en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล"},             // เช่น { en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล" }
   },
+
+  /* ---------- ช่องทางติดต่อ (แสดงในหน้าต่างที่เด้งขึ้นเมื่อกดปุ่ม "ติดต่อฉัน") ----------
+     copy: true = มีปุ่ม "คัดลอก" / ไม่ใส่ copy = มีปุ่ม "เปิด" (เปิดลิงก์ในแท็บใหม่)
+     อยากเพิ่ม LinkedIn / LINE → เพิ่มบรรทัดใหม่ในรูปแบบเดียวกัน เช่น
+     { key: "linkedin", value: "linkedin.com/in/ชื่อคุณ", href: "https://www.linkedin.com/in/ชื่อคุณ" }, */
+  contact: [
+    { key: "email", value: "atikorn.sub@gmail.com", href: "mailto:atikorn.sub@gmail.com", copy: true },
+    { key: "phone", value: "064-696-3328", href: "tel:+66646963328", copy: true },
+    { key: "github", value: "github.com/atikorn-sub", href: "https://github.com/atikorn-sub" },
+  ],
 
   /* ---------- การศึกษา ---------- */
   education: [
