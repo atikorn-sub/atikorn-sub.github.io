@@ -401,8 +401,28 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
   margin: 0; padding: 24px; border: 0; background: rgba(5, 8, 12, .88);
   backdrop-filter: blur(6px); cursor: zoom-out;
 }
-.lightbox[open] { display: grid; place-items: center; }
-.lightbox img { max-width: 100%; max-height: 100%; object-fit: contain; border-radius: var(--radius); box-shadow: var(--shadow); }
+.lightbox[open] { display: flex; align-items: center; justify-content: center; gap: 12px; }
+.lb-fig { margin: 0; min-width: 0; max-height: 100%; display: flex; flex-direction: column; align-items: center; gap: 10px; cursor: default; }
+.lb-fig img { max-width: 100%; max-height: calc(100vh - 110px); object-fit: contain; border-radius: var(--radius); box-shadow: var(--shadow); }
+.lb-fig figcaption { color: #d6deeb; font-size: .9rem; text-align: center; min-height: 1.4em; }
+.lb-nav {
+  flex: 0 0 auto; width: 46px; height: 46px; font-size: 1.8rem; line-height: 1; cursor: pointer;
+  color: #fff; background: rgba(255, 255, 255, .12); border: 1px solid rgba(255, 255, 255, .25); border-radius: 50%;
+}
+.lb-nav:hover { background: rgba(255, 255, 255, .22); }
+.lb-nav[hidden], .lb-count[hidden] { display: none; }
+.lb-count {
+  position: absolute; bottom: 18px; left: 50%; transform: translateX(-50%);
+  font-family: var(--mono); font-size: .8rem; color: #d6deeb;
+  background: rgba(255, 255, 255, .12); padding: 3px 12px; border-radius: 999px;
+}
+@media (max-width: 640px) {
+  .lightbox { padding: 12px; }
+  .lb-nav { position: absolute; bottom: 14px; width: 40px; height: 40px; }
+  .lb-nav.prev { left: 16px; }
+  .lb-nav.next { right: 16px; }
+  .lb-fig img { max-height: calc(100vh - 150px); }
+}
 .lightbox-close {
   position: absolute; top: 16px; right: 16px; width: 40px; height: 40px;
   font-size: 1rem; color: #fff; cursor: pointer;
@@ -454,3 +474,145 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
 }
 .c-val a { transition: color .2s; }
 .c-val a:hover { color: var(--green); }
+
+/* ---------- Achievements (achievements.log) ---------- */
+/* แบบ A: รางวัลเด่น = การ์ดใหญ่เต็มความกว้าง (รูปซ้าย/ขวาสลับกัน) + รางวัลอื่น = แถบการ์ดเลื่อนแนวนอน */
+.achv-meta { display: flex; align-items: center; gap: 10px; margin: 0 0 8px; }
+.achv-icon { font-size: 1.4rem; line-height: 1; }
+.achv-year {
+  font-family: var(--mono); font-size: .76rem; color: var(--muted);
+  border: 1px solid var(--border); border-radius: 999px; padding: 1px 10px;
+}
+.achv-art {
+  width: 100%; height: 100%; display: grid; place-items: center; font-size: 4rem;
+  background:
+    radial-gradient(circle at 30% 20%, color-mix(in srgb, var(--amber) 26%, transparent), transparent 62%),
+    var(--surface-2);
+}
+
+.achv-featured { display: grid; gap: 18px; }
+.achv-feature {
+  display: grid; grid-template-columns: 1.15fr 1fr; align-items: stretch;
+  background: color-mix(in srgb, var(--amber) 5%, var(--surface));
+  border: 1px solid color-mix(in srgb, var(--amber) 50%, var(--border));
+  border-radius: var(--radius); overflow: hidden;
+}
+.achv-feature.alt { grid-template-columns: 1fr 1.15fr; }
+.achv-feature.alt .achv-media { order: 2; }
+.achv-media { position: relative; min-height: 240px; }
+.achv-media .gallery { height: 100%; aspect-ratio: auto; min-height: 240px; }
+.achv-text { padding: 26px 28px; display: flex; flex-direction: column; justify-content: center; }
+.achv-text h3 { font-size: clamp(1.15rem, 2.6vw, 1.5rem); color: var(--amber); }
+.achv-text p:not(.achv-meta) { margin: 8px 0 0; color: var(--muted); }
+.achv-feature .achv-year { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, var(--border)); }
+
+.rail-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 34px 0 12px; }
+.rail-head[hidden] { display: none; }
+.rail-title { font-family: var(--mono); font-size: .85rem; font-weight: 500; color: var(--muted); }
+.rail-btns { display: flex; gap: 8px; }
+.rail-btn {
+  width: 34px; height: 34px; font-size: 1.2rem; line-height: 1; cursor: pointer;
+  color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+  transition: border-color .2s, color .2s;
+}
+.rail-btn:hover { border-color: var(--green); color: var(--green); }
+.achv-rail {
+  display: flex; gap: 14px; overflow-x: auto; padding: 2px 2px 14px;
+  scroll-snap-type: x mandatory; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.achv-card {
+  flex: 0 0 min(300px, 82%); scroll-snap-align: start;
+  display: flex; flex-direction: column;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); overflow: hidden;
+  transition: border-color .2s, transform .2s;
+}
+.achv-card:hover { border-color: color-mix(in srgb, var(--green) 50%, var(--border)); transform: translateY(-3px); }
+.achv-thumb { position: relative; aspect-ratio: 16 / 10; background: var(--surface-2); overflow: hidden; }
+.achv-thumb .gal-item { position: absolute; inset: 0; width: 100%; height: 100%; }
+.achv-thumb .gal-img { position: absolute; inset: 0; object-position: 50% 12%; }
+.gal-count {
+  position: absolute; right: 8px; bottom: 8px; font-family: var(--mono); font-size: .72rem; color: #fff;
+  background: rgba(5, 8, 12, .7); padding: 2px 9px; border-radius: 999px; pointer-events: none;
+}
+.achv-art { font-size: 3rem; }
+.achv-card-body { padding: 14px 16px 18px; }
+.achv-card-body h3 { font-size: 1rem; }
+.achv-card-body p:not(.achv-meta) { margin: 6px 0 0; color: var(--muted); font-size: .9rem; }
+@media (max-width: 760px) {
+  .achv-feature, .achv-feature.alt { grid-template-columns: 1fr; }
+  .achv-feature.alt .achv-media { order: 0; }
+  .achv-media, .achv-media .gallery { min-height: 200px; }
+  .achv-text { padding: 20px; }
+}
+
+/* ---------- แกลเลอรีรูป (1 / 2 / 3+ รูป จัดวางอัตโนมัติ) ---------- */
+.project-card { position: relative; }
+.project-card.linked { cursor: pointer; }
+.stretched::after { content: ""; position: absolute; inset: 0; z-index: 1; }
+
+.gallery { display: grid; gap: 4px; position: relative; z-index: 2; background: var(--border); overflow: hidden; grid-auto-rows: minmax(0, 1fr); }
+/* รูปวางซ้อนในกรอบ (absolute) เพื่อไม่ให้ความสูงจริงของรูปดันกรอบ — รูปแนวตั้ง/แนวนอนจึงได้กรอบขนาดเท่ากันหมด
+   รูปจะถูกครอปเข้ากรอบ (เน้นส่วนบนของรูป) ส่วนภาพเต็มดูได้ตอนกดขยาย */
+.gallery .gal-item { min-height: 0; }
+.gallery .gal-img { position: absolute; inset: 0; object-position: 50% 12%; }
+.gal-item {
+  position: relative; display: block; padding: 0; border: 0; overflow: hidden; cursor: zoom-in;
+  background: var(--surface-2);
+}
+.gal-img { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .35s ease; }
+.gal-item:hover .gal-img { transform: scale(1.05); }
+.gal-item:focus-visible { outline: 2px solid var(--green); outline-offset: -2px; }
+.gallery.g1 { aspect-ratio: 16 / 9; }
+.gallery.g2 { grid-template-columns: 1fr 1fr; aspect-ratio: 16 / 9; }
+.gallery.g3 { grid-template-columns: 2fr 1fr; grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); aspect-ratio: 16 / 9; }
+.gallery.g3 .gal-item:first-child { grid-row: 1 / span 2; }
+.gal-more {
+  position: absolute; inset: 0; display: grid; place-items: center;
+  font-family: var(--mono); font-size: 1.4rem; font-weight: 700; color: #fff;
+  background: rgba(5, 8, 12, .62); pointer-events: none;
+}
+
+/* ---------- Certificates (ls ~/certificates) ---------- */
+.cert-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.gal-item.cert {
+  display: flex; flex-direction: column; text-align: left; font: inherit; color: inherit;
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  transition: border-color .2s, transform .2s;
+}
+.gal-item.cert:hover { border-color: var(--green); transform: translateY(-3px); }
+.gal-item.cert .gal-img { aspect-ratio: 4 / 3; height: auto; }
+.cert-name { font-family: var(--mono); font-size: .76rem; color: var(--muted); padding: 9px 14px; border-top: 1px solid var(--border); }
+@media (max-width: 640px) { .cert-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; } }
+
+/* ---------- สไลด์โชว์ในการ์ดรางวัลเด่น ---------- */
+.carousel { position: relative; height: 100%; min-height: 260px; overflow: hidden; background: var(--surface-2); }
+.car-track { display: flex; height: 100%; transition: transform .6s ease; }
+.car-slide { flex: 0 0 100%; position: relative; min-height: 260px; padding: 0; border: 0; overflow: hidden; cursor: zoom-in; background: var(--surface-2); }
+.car-slide .gal-img { position: absolute; inset: 0; object-position: 50% 20%; }
+.car-nav {
+  position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+  width: 38px; height: 38px; font-size: 1.5rem; line-height: 1; cursor: pointer;
+  color: #fff; background: rgba(5, 8, 12, .5); border: 1px solid rgba(255, 255, 255, .28); border-radius: 50%;
+  opacity: .85; transition: background .2s, opacity .2s;
+}
+.car-nav:hover { background: rgba(5, 8, 12, .8); opacity: 1; }
+.car-nav.prev { left: 12px; }
+.car-nav.next { right: 12px; }
+.car-dots { position: absolute; z-index: 2; bottom: 12px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; }
+.car-dot {
+  width: 9px; height: 9px; padding: 0; border: 0; border-radius: 50%; cursor: pointer;
+  background: rgba(255, 255, 255, .5); box-shadow: 0 0 0 1px rgba(0, 0, 0, .25);
+  transition: background .25s, transform .25s, width .25s;
+}
+.car-dot.active { width: 22px; border-radius: 999px; background: var(--amber); }
+@media (prefers-reduced-motion: reduce) { .car-track { transition: none; } }
+
+/* ปุ่มที่ใช้ attribute hidden ต้องซ่อนจริง (กัน .btn { display: inline-flex } ทับ) */
+.btn[hidden] { display: none; }
+
+/* ---------- หน้าต่างเรซูเม (ขอทางอีเมล) ---------- */
+.deny { margin: 14px 0 0; font-family: var(--mono); font-size: .88rem; color: var(--red); }
+.resume-msg { margin: 10px 0 0; font-family: var(--sans); font-size: .95rem; line-height: 1.7; }
+#resumeDialog .contact-list { margin-top: 16px; }
+.resume-actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 14px; }
+.resume-actions .btn { font-size: .85rem; padding: 9px 16px; }

@@ -64,10 +64,126 @@ function typeText(el, text) {
   step();
 }
 
+/* ---------- แกลเลอรีรูป ----------
+   images ใน data.js ใส่ได้ 2 แบบ: "path.jpg"  หรือ  { src: "path.jpg", caption: { en, th } }
+   1 รูป = ภาพใหญ่ / 2 รูป = วางคู่ / 3 รูปขึ้นไป = โมเสก (รูปที่ 4+ รวมเป็นป้าย "+N") */
+const galleries = []; // เก็บรายการรูปของทุกแกลเลอรี เพื่อให้ Lightbox เปิดดูต่อกันได้
+
+// รูปที่ยังไม่มีไฟล์ → แสดงกรอบ Avatar พร้อมพิมพ์พาธที่ต้องวางไฟล์
+const placeholder = (path) =>
+  "data:image/svg+xml;utf8," +
+  encodeURIComponent(
+    `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 800 600'><rect width='800' height='600' fill='#141c29'/>` +
+    `<g fill='#1f2a3b'><circle cx='400' cy='225' r='85'/><path d='M200 600c0-120 80-200 200-200s200 80 200 200z'/></g>` +
+    `<text x='400' y='560' font-family='monospace' font-size='24' fill='#7f8ea3' text-anchor='middle'>${esc(path)}</text></svg>`
+  );
+
+const normImages = (list) => list.map((x) => (typeof x === "string" ? { src: x } : x));
+
+function registerGallery(list, name) {
+  return galleries.push({ items: normImages(list), name }) - 1;
+}
+
+function galleryHtml(list, name) {
+  if (!list || !list.length) return "";
+  const id = registerGallery(list, name);
+  const items = galleries[id].items;
+  const more = items.length - 3;
+  return `<div class="gallery g${Math.min(items.length, 3)}">${items
+    .slice(0, 3)
+    .map((it, i) => `
+      <button class="gal-item" type="button" data-g="${id}" data-i="${i}" aria-label="${esc(name)} ${i + 1}/${items.length}">
+        <img class="gal-img" loading="lazy" src="${esc(it.src)}" alt="${esc(it.caption ? t(it.caption) : name)}">
+        ${i === 2 && more > 0 ? `<span class="gal-more">+${more}</span>` : ""}
+      </button>`)
+    .join("")}</div>`;
+}
+
+/* ---------- สไลด์โชว์ (ใช้กับการ์ดรางวัลเด่นที่มี 2 รูปขึ้นไป) ----------
+   เลื่อนอัตโนมัติทุก 3 วินาทีแบบวนลูป / หยุดเมื่อเอาเมาส์ชี้หรือโฟกัส / มีลูกศร, จุดบอกตำแหน่ง, ปัดนิ้วบนมือถือ */
+const CAROUSEL_DELAY = 3000;
+const carouselTimers = [];
+
+function carouselHtml(list, name) {
+  const id = registerGallery(list, name);
+  const items = galleries[id].items;
+  return `
+    <div class="carousel" data-count="${items.length}">
+      <div class="car-track">${items
+        .map((it, i) => `
+          <button class="car-slide gal-item" type="button" data-g="${id}" data-i="${i}" aria-label="${esc(name)} ${i + 1}/${items.length}">
+            <img class="gal-img" src="${esc(it.src)}" alt="${esc(it.caption ? t(it.caption) : name)}"${i ? ' loading="lazy"' : ""}>
+          </button>`)
+        .join("")}</div>
+      <button class="car-nav prev" type="button" aria-label="Previous">‹</button>
+      <button class="car-nav next" type="button" aria-label="Next">›</button>
+      <div class="car-dots">${items
+        .map((_, i) => `<button class="car-dot${i ? "" : " active"}" type="button" data-dot="${i}" aria-label="${i + 1}"></button>`)
+        .join("")}</div>
+    </div>`;
+}
+
+function initCarousels() {
+  carouselTimers.splice(0).forEach(clearInterval); // ล้างตัวจับเวลาเก่า (เช่นตอนสลับภาษา render ใหม่)
+  document.querySelectorAll(".carousel").forEach((el) => {
+    const n = Number(el.dataset.count);
+    const track = el.querySelector(".car-track");
+    const dots = el.querySelectorAll(".car-dot");
+    let cur = 0;
+    let timer = null;
+    let paused = false;
+
+    const go = (i) => {
+      cur = (i + n) % n;
+      track.style.transform = `translateX(${-cur * 100}%)`;
+      dots.forEach((d, k) => d.classList.toggle("active", k === cur));
+    };
+    const stop = () => { clearInterval(timer); timer = null; };
+    const start = () => {
+      stop();
+      if (reduceMotion || paused) return;
+      timer = setInterval(() => go(cur + 1), CAROUSEL_DELAY);
+      carouselTimers.push(timer);
+    };
+
+    el.querySelector(".prev").addEventListener("click", () => { go(cur - 1); start(); });
+    el.querySelector(".next").addEventListener("click", () => { go(cur + 1); start(); });
+    dots.forEach((d) => d.addEventListener("click", () => { go(Number(d.dataset.dot)); start(); }));
+
+    // หยุดเลื่อนตอนผู้ชมกำลังดู (เมาส์ชี้ / โฟกัสด้วยคีย์บอร์ด) แล้วเริ่มใหม่ตอนออก
+    el.addEventListener("mouseenter", () => { paused = true; stop(); });
+    el.addEventListener("mouseleave", () => { paused = false; start(); });
+    el.addEventListener("focusin", () => { paused = true; stop(); });
+    el.addEventListener("focusout", () => { paused = false; start(); });
+
+    // ปัดซ้าย/ขวาบนมือถือ
+    let x0 = null;
+    el.addEventListener("touchstart", (e) => { x0 = e.changedTouches[0].clientX; }, { passive: true });
+    el.addEventListener("touchend", (e) => {
+      if (x0 === null) return;
+      const dx = e.changedTouches[0].clientX - x0;
+      x0 = null;
+      if (Math.abs(dx) > 40) { go(cur + (dx < 0 ? 1 : -1)); start(); }
+    });
+
+    start();
+  });
+}
+
+// รูปไหนโหลดไม่ได้ → เปลี่ยนเป็นกรอบสำรอง (error ของ <img> ไม่ bubble จึงต้องดักตอน capture)
+document.addEventListener("error", (e) => {
+  const img = e.target;
+  if (img.tagName === "IMG" && img.classList.contains("gal-img") && !img.dataset.missing) {
+    img.dataset.missing = "1";
+    img.src = placeholder(img.getAttribute("src"));
+  }
+}, true);
+
 /* ---------- สร้างเนื้อหาทั้งหน้า ---------- */
 function render() {
   const ui = RESUME.ui[lang];
   const p = RESUME.profile[lang];
+  galleries.length = 0; // สร้างรายการแกลเลอรีใหม่ทุกครั้งที่ render (เช่นตอนสลับภาษา)
 
   document.documentElement.lang = lang;
   document.querySelectorAll("[data-i18n]").forEach((el) => {
@@ -121,16 +237,21 @@ function render() {
   /* Projects */
   $("projList").innerHTML = RESUME.projects
     .map((pr) => {
-      const inner = `
-        <div class="file-tab"><span class="file-name">${esc(pr.file || "")}</span><span class="label">${esc(t(pr.label))}</span></div>
-        <div class="project-body">
-          <h3>${esc(t(pr.title))}${pr.link ? ' <span class="arrow">↗</span>' : ""}</h3>
-          <p>${esc(t(pr.desc))}</p>
-          ${tagsHtml(pr.tags)}
-        </div>`;
-      return pr.link
-        ? `<a class="project-card" href="${esc(pr.link)}" target="_blank" rel="noopener">${inner}</a>`
-        : `<article class="project-card">${inner}</article>`;
+      const title = esc(t(pr.title));
+      // มีลิงก์ → ลิงก์ที่ชื่อโปรเจกต์ขยายคลุมทั้งการ์ด (รูปในแกลเลอรียังกดซูมได้ ไม่โดนลิงก์ทับ)
+      const heading = pr.link
+        ? `<a class="stretched" href="${esc(pr.link)}" target="_blank" rel="noopener">${title} <span class="arrow">↗</span></a>`
+        : title;
+      return `
+        <article class="project-card${pr.link ? " linked" : ""}">
+          <div class="file-tab"><span class="file-name">${esc(pr.file || "")}</span><span class="label">${esc(t(pr.label))}</span></div>
+          ${galleryHtml(pr.images, t(pr.title))}
+          <div class="project-body">
+            <h3>${heading}</h3>
+            <p>${esc(t(pr.desc))}</p>
+            ${tagsHtml(pr.tags)}
+          </div>
+        </article>`;
     })
     .join("");
 
@@ -172,6 +293,72 @@ function render() {
   eduLines.push(S.p("]"));
   $("eduCode").innerHTML = codeLines(eduLines);
 
+  /* Achievements → รางวัลและกิจกรรม (รายการที่ top: true จะถูกไฮไลต์) */
+  // แบบ A: รางวัลเด่น (top: true) = การ์ดใหญ่เต็มความกว้าง รูปซ้าย/ขวาสลับกัน
+  //        รางวัลอื่น ๆ = แถบการ์ดเลื่อนแนวนอน (ไม่มีรูปก็แสดงเป็นไอคอนใหญ่แทน)
+  const feats = RESUME.achievements.filter((a) => a.top);
+  const rest = RESUME.achievements.filter((a) => !a.top);
+  const hasImg = (a) => a.images && a.images.length;
+  const art = (a) => `<div class="achv-art" aria-hidden="true"><span>${a.icon}</span></div>`;
+  const meta = (a) =>
+    `<p class="achv-meta"><span class="achv-icon" aria-hidden="true">${a.icon}</span>${a.year ? `<span class="achv-year">${esc(t(a.year))}</span>` : ""}</p>`;
+
+  $("achvFeatured").innerHTML = feats
+    .map((a, i) => `
+      <article class="achv-feature${i % 2 ? " alt" : ""}">
+        <div class="achv-media">${
+          !hasImg(a) ? art(a)
+          : a.images.length > 1 ? carouselHtml(a.images, t(a.title))
+          : galleryHtml(a.images, t(a.title))
+        }</div>
+        <div class="achv-text">
+          ${meta(a)}
+          <h3>${esc(t(a.title))}</h3>
+          <p>${esc(t(a.desc))}</p>
+        </div>
+      </article>`)
+    .join("");
+
+  $("achvMore").hidden = !rest.length;
+  $("achvRail").innerHTML = rest
+    .map((a) => {
+      let thumb = art(a);
+      if (hasImg(a)) {
+        const id = registerGallery(a.images, t(a.title));
+        const items = galleries[id].items;
+        thumb = `
+          <button class="gal-item" type="button" data-g="${id}" data-i="0" aria-label="${esc(t(a.title))}">
+            <img class="gal-img" loading="lazy" src="${esc(items[0].src)}" alt="${esc(t(a.title))}">
+            ${items.length > 1 ? `<span class="gal-count">+${items.length - 1}</span>` : ""}
+          </button>`;
+      }
+      return `
+        <article class="achv-card">
+          <div class="achv-thumb">${thumb}</div>
+          <div class="achv-card-body">
+            ${meta(a)}
+            <h3>${esc(t(a.title))}</h3>
+            <p>${esc(t(a.desc))}</p>
+          </div>
+        </article>`;
+    })
+    .join("");
+
+  /* Certificates → ตารางรูปใบเกียรติบัตร (ทั้งหมดอยู่ในแกลเลอรีเดียว กดแล้วไล่ดูต่อกันได้) */
+  const certs = RESUME.certificates || [];
+  $("certificates").hidden = !certs.length;
+  document.querySelector('.nav a[href="#certificates"]').hidden = !certs.length;
+  if (certs.length) {
+    const cid = registerGallery(certs, ui.navCerts);
+    $("certGrid").innerHTML = galleries[cid].items
+      .map((c, i) => `
+        <button class="gal-item cert" type="button" data-g="${cid}" data-i="${i}">
+          <img class="gal-img" loading="lazy" src="${esc(c.src)}" alt="${esc(c.caption ? t(c.caption) : "Certificate " + (i + 1))}">
+          <span class="cert-name">${esc(c.caption ? t(c.caption) : "cert-" + String(i + 1).padStart(2, "0"))}</span>
+        </button>`)
+      .join("");
+  }
+
   /* Contact → รายการช่องทางติดต่อในหน้าต่าง "ติดต่อฉัน" */
   $("contactList").innerHTML = RESUME.contact
     .map((c, i) => `
@@ -184,6 +371,26 @@ function render() {
       </li>`)
     .join("");
   $("contactClose").setAttribute("aria-label", ui.close);
+
+  initCarousels();
+
+  /* หน้าต่าง "ดาวน์โหลดเรซูเม": ไม่ปล่อยไฟล์ตรง ๆ → ข้อความขำ ๆ + ให้ขอทางอีเมล (ดึงอีเมลจาก RESUME.contact) */
+  const emailItem = RESUME.contact.find((c) => c.key === "email");
+  const mail = emailItem ? emailItem.value : "";
+  const mailHref = `mailto:${mail}?subject=${encodeURIComponent(ui.resumeSubject)}&body=${encodeURIComponent(ui.resumeBody)}`;
+  $("resumeBtn").href = mailHref; // กรณี JavaScript ทำงานผิดพลาด ปุ่มยังเปิดอีเมลขอเรซูเมได้
+  $("resumeDeny").textContent = ui.resumeDeny;
+  $("resumeMsg").textContent = ui.resumeMsg;
+  $("resumeSend").textContent = ui.resumeSend;
+  $("resumeSend").href = mailHref;
+  $("resumeClose").setAttribute("aria-label", ui.close);
+  $("resumeList").innerHTML = emailItem
+    ? `<li style="--i:0">
+         <span class="c-key">email</span>
+         <span class="c-val"><a href="${esc(mailHref)}">${esc(mail)}</a></span>
+         <button class="c-btn" type="button" data-copy="${esc(mail)}" data-href="${esc(mailHref)}">${esc(ui.copy)}</button>
+       </li>`
+    : "";
 
   $("langBtn").textContent = lang === "en" ? "ไทย" : "EN";
 }
@@ -202,13 +409,60 @@ $("themeBtn").addEventListener("click", () => {
   store.set("theme", next);
 });
 
-/* ---------- กดรูปโปรไฟล์เพื่อซูม ---------- */
+/* ---------- ปุ่ม ‹ › เลื่อนแถบรางวัลอื่น ๆ ---------- */
+$("railPrev").addEventListener("click", () => $("achvRail").scrollBy({ left: -320, behavior: "smooth" }));
+$("railNext").addEventListener("click", () => $("achvRail").scrollBy({ left: 320, behavior: "smooth" }));
+
+/* ---------- Lightbox: ดูรูปเต็มจอ ไล่ดูต่อกันได้ (ปุ่ม ‹ ›, ลูกศรคีย์บอร์ด, ปัดบนมือถือ) ---------- */
 const lightbox = $("lightbox");
-$("avatarBtn").addEventListener("click", () => {
-  $("lightboxImg").src = $("avatarBtn").querySelector("img").src;
-  lightbox.showModal();
+let lbList = [];
+let lbIndex = 0;
+
+function showLightbox() {
+  const item = lbList[lbIndex];
+  const img = $("lightboxImg");
+  img.onerror = () => { img.onerror = null; img.src = placeholder(item.src); }; // ไม่มีไฟล์ → กรอบสำรอง
+  img.src = item.src;
+  img.alt = item.caption ? t(item.caption) : "";
+  $("lightboxCap").textContent = item.caption ? t(item.caption) : "";
+  const many = lbList.length > 1;
+  $("lightboxPrev").hidden = $("lightboxNext").hidden = $("lightboxCount").hidden = !many;
+  $("lightboxCount").textContent = `${lbIndex + 1} / ${lbList.length}`;
+}
+function openLightbox(list, index = 0) {
+  lbList = list;
+  lbIndex = index;
+  showLightbox();
+  if (!lightbox.open) lightbox.showModal();
+}
+function stepLightbox(d) {
+  if (lbList.length < 2) return;
+  lbIndex = (lbIndex + d + lbList.length) % lbList.length;
+  showLightbox();
+}
+
+$("avatarBtn").addEventListener("click", () => openLightbox([{ src: $("avatarBtn").querySelector("img").src }]));
+// กดรูปในแกลเลอรี (การ์ดโปรเจกต์ / รางวัล / เกียรติบัตร) → เปิดชุดรูปนั้นตั้งแต่รูปที่กด
+document.addEventListener("click", (e) => {
+  const b = e.target.closest(".gal-item");
+  if (b) openLightbox(galleries[b.dataset.g].items, Number(b.dataset.i));
 });
-lightbox.addEventListener("click", () => lightbox.close()); // กดตรงไหนก็ปิด (Esc ปิดได้อยู่แล้ว)
+$("lightboxPrev").addEventListener("click", () => stepLightbox(-1));
+$("lightboxNext").addEventListener("click", () => stepLightbox(1));
+$("lightboxClose").addEventListener("click", () => lightbox.close());
+lightbox.addEventListener("click", (e) => { if (e.target === lightbox) lightbox.close(); }); // กดพื้นที่ว่างเพื่อปิด
+lightbox.addEventListener("keydown", (e) => {
+  if (e.key === "ArrowLeft") stepLightbox(-1);
+  if (e.key === "ArrowRight") stepLightbox(1);
+});
+let touchX = null;
+lightbox.addEventListener("touchstart", (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+lightbox.addEventListener("touchend", (e) => {
+  if (touchX === null) return;
+  const dx = e.changedTouches[0].clientX - touchX;
+  touchX = null;
+  if (Math.abs(dx) > 50) stepLightbox(dx < 0 ? 1 : -1);
+});
 
 // เอาเมาส์ชี้ที่รูปแล้วซูมเข้า โดยจุดที่ซูมจะเลื่อนตามเมาส์
 const avatarBtn = $("avatarBtn");
@@ -233,8 +487,8 @@ $("contactBtn").addEventListener("click", (e) => {
 $("contactClose").addEventListener("click", () => contactDialog.close());
 contactDialog.addEventListener("click", (e) => { if (e.target === contactDialog) contactDialog.close(); }); // กดพื้นหลังเพื่อปิด
 
-// ปุ่มคัดลอก (ใช้ event delegation เพราะรายการถูกสร้างใหม่ทุกครั้งที่สลับภาษา)
-$("contactList").addEventListener("click", async (e) => {
+// ปุ่มคัดลอก (ใช้ event delegation เพราะรายการถูกสร้างใหม่ทุกครั้งที่สลับภาษา) — ใช้ร่วมกันทั้งหน้าต่างติดต่อและหน้าต่างเรซูเม
+const bindCopy = (listEl) => listEl.addEventListener("click", async (e) => {
   const btn = e.target.closest("[data-copy]");
   if (!btn) return;
   try {
@@ -246,6 +500,17 @@ $("contactList").addEventListener("click", async (e) => {
     location.href = btn.dataset.href; // คัดลอกไม่ได้ → เปิดโปรแกรมอีเมล/โทรศัพท์แทน
   }
 });
+bindCopy($("contactList"));
+bindCopy($("resumeList"));
+
+/* ---------- ปุ่ม "ดาวน์โหลดเรซูเม" → หน้าต่างขอเรซูเมทางอีเมล ---------- */
+const resumeDialog = $("resumeDialog");
+$("resumeBtn").addEventListener("click", (e) => {
+  e.preventDefault();
+  resumeDialog.showModal();
+});
+$("resumeClose").addEventListener("click", () => resumeDialog.close());
+resumeDialog.addEventListener("click", (e) => { if (e.target === resumeDialog) resumeDialog.close(); });
 
 /* ---------- Animation ตอนเลื่อนจอ ---------- */
 if (!reduceMotion && "IntersectionObserver" in window) {
