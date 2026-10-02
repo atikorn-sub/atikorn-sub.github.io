@@ -55,7 +55,7 @@ const RESUME = {
     th: {
       name: "อธิกร สืบซึ้ง",
       role: "Software Developer · K2 & SQL",
-      tagline: "พัฒนาระบบ Workflow Automation และระบบการเงินที่มีข้อมูลขนาดใหญ่ และกำลังพัฒนาตัวเองสู่ Full-stack Developer",
+      tagline: "พัฒนาระบบ Workflow Automation และระบบการเงินที่มีข้อมูลขนาดใหญ่ และกำลังพัฒนาตัวเองสู่ Full-stack Developer/Back-end Developer",
       location: "พระนครศรีอยุธยา, ประเทศไทย",
       about:
         "เป็นนักพัฒนาที่ชอบเปลี่ยนกระบวนการทางธุรกิจที่ซับซ้อนให้กลายเป็นระบบที่ใช้งานได้จริง " +
@@ -202,7 +202,7 @@ const RESUME = {
     workType: { en: "Hybrid / Work from home", th: "Hybrid / ทำงานที่บ้าน" },         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
     availableFrom: { en: "Within 30 days", th: "ภายใน 30 วัน" },    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
     roles: ["Full-stack Developer", "Backend Developer", "SQL / K2 Developer"],
-    note: null,             // เช่น { en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล" }
+    note: {en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล"},             // เช่น { en: "Bangkok or nearby", th: "กรุงเทพฯ และปริมณฑล" }
   },
 
   /* ---------- การศึกษา ---------- */
