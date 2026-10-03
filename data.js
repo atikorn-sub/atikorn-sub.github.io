@@ -217,7 +217,8 @@ const RESUME = {
         "images/projects/ap-ecommerce-7.jpg",
         "images/projects/ap-ecommerce-8.jpg",
       ],
-      link: "https://ap-ecommerce.vercel.app/",
+      // link: "https://ap-ecommerce.vercel.app/",
+      link: "https://ap-ecommerce-shop.vercel.app/",
     },
     {
       file: "helpdesk.app",
