@@ -91,6 +91,8 @@ const RESUME = {
       items: ["K2", "BPA / RPA", "Power Apps (Power Fx)", "Power BI", "Microsoft Power Platform"] },
     { key: "web", group: { en: "Web Development", th: "พัฒนาเว็บ" },
       items: ["HTML", "CSS", "JavaScript", "React", "REST API", "Prisma ORM"] },
+    { key: "ai", group: { en: "AI", th: "AI" },
+      items: ["ChatGPT", "Claude", "Claude Code", "Prompt Engineering", "AI-assisted Development"] },
     { key: "other", group: { en: "Other", th: "อื่น ๆ" },
       items: ["Microsoft 365", "Active Directory", "Graphic Design", "Video Editing", "Presenting"] },
   ],
