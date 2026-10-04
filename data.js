@@ -275,8 +275,8 @@ const RESUME = {
   -------------------------------------------------------- */
   expectations: {
     show: true,
-    salaryMin: 20000,        // เช่น 35000
-    salaryMax: 30000,        // เช่น 45000
+    salaryMin: 25000,        // เช่น 35000
+    salaryMax: 33000,        // เช่น 45000
     negotiable: true,       // true = แสดงป้าย "ต่อรองได้"
     workType: { en: "Hybrid / Work from home", th: "Hybrid / ทำงานที่บ้าน" },         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
     availableFrom: { en: "Within 30 days", th: "ภายใน 30 วัน" },    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
