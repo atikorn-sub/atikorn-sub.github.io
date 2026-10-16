@@ -270,7 +270,9 @@ function render() {
   if (ex && ex.show) {
     const fmt = (n) => Number(n).toLocaleString("en-US");
     let salary = ui.tbd;
-    if (ex.salaryMin || ex.salaryMax) {
+    if (ex.salaryText) {
+      salary = t(ex.salaryText);
+    } else if (ex.salaryMin || ex.salaryMax) {
       const range = ex.salaryMin && ex.salaryMax
         ? `${fmt(ex.salaryMin)} – ${fmt(ex.salaryMax)}`
         : fmt(ex.salaryMin || ex.salaryMax);

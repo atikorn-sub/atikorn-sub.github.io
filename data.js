@@ -277,9 +277,10 @@ const RESUME = {
   -------------------------------------------------------- */
   expectations: {
     show: true,
-    salaryMin: 25000,        // เช่น 35000
-    salaryMax: 33000,        // เช่น 45000
-    negotiable: true,       // true = แสดงป้าย "ต่อรองได้"
+    salaryText: { en: "Flexible — depends on the company's pay structure", th: "ยืดหยุ่น — ขึ้นอยู่กับโครงสร้างเงินเดือนของบริษัท" }, // ถ้ามีค่านี้ จะแสดงแทนตัวเลข (ลบบรรทัดนี้เพื่อกลับไปใช้ตัวเลข)
+    salaryMin: null,        // เช่น 35000
+    salaryMax: null,        // เช่น 45000
+    negotiable: false,       // true = แสดงป้าย "ต่อรองได้"
     workType: { en: "Hybrid / Work from home", th: "Hybrid / ทำงานที่บ้าน" },         // เช่น { en: "Hybrid / Onsite", th: "Hybrid / Onsite" }
     availableFrom: { en: "Within 30 days", th: "ภายใน 30 วัน" },    // เช่น { en: "Within 30 days", th: "ภายใน 30 วัน" }
     roles: ["Full-stack Developer", "Backend Developer", "SQL / K2 Developer"],
