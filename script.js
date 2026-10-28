@@ -99,6 +99,80 @@ function galleryHtml(list, name) {
     .join("")}</div>`;
 }
 
+/* ---------- การ์ดโปรเจกต์เด่น (featured: true ใน data.js) ----------
+   เต็มแถว: วิดีโอเต็มความกว้างด้านบน (เล่นเองแบบไม่มีเสียงเมื่อเลื่อนมาถึง หยุดเมื่อเลื่อนผ่าน),
+   รายละเอียด 2 คอลัมน์ด้านล่าง (ชื่อ/คำอธิบาย/ปุ่ม | ไฮไลต์/แท็ก) และแถบภาพล่างสุด */
+function featuredHtml(pr) {
+  const name = t(pr.title);
+  const gid = registerGallery(pr.images || [], name);
+  const items = galleries[gid].items;
+  return `
+    <article class="project-card featured">
+      <div class="file-tab"><span class="file-name">${esc(pr.file || "")}</span><span class="label">${esc(t(pr.label))}</span></div>
+      <div class="feat-grid">
+        <div class="feat-media">
+          <video class="feat-video" src="${esc(pr.video)}" poster="${esc(pr.poster)}" muted loop playsinline preload="none" aria-label="${esc(name)}"></video>
+          <button class="feat-toggle" type="button" aria-label="${esc(RESUME.ui[lang].playPause)}">
+            <svg class="i-play" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l11-6.5z"/></svg>
+            <svg class="i-pause" viewBox="0 0 24 24" width="16" height="16" fill="currentColor" aria-hidden="true"><path d="M7 5h3.5v14H7zM13.5 5H17v14h-3.5z"/></svg>
+          </button>
+        </div>
+        <div class="feat-body">
+          <div class="feat-col">
+            <div class="feat-head">
+              <img class="feat-icon" src="${esc(pr.icon)}" alt="" width="56" height="56">
+              <div>
+                <h3>${esc(name)}</h3>
+                <p class="feat-tagline">${esc(t(pr.tagline))}</p>
+              </div>
+            </div>
+            <p class="feat-desc">${esc(t(pr.desc))}</p>
+            <div class="feat-links">${(pr.links || [])
+              .map((l) => `<a class="btn${l.primary ? " primary" : ""}" href="${esc(l.href)}" target="_blank" rel="noopener">${esc(t(l.label))} <span aria-hidden="true">↗</span></a>`)
+              .join("")}</div>
+          </div>
+          <div class="feat-col">
+            <ul class="feat-list">${(pr.highlights || []).map((h) => `<li>${esc(t(h))}</li>`).join("")}</ul>
+            ${tagsHtml(pr.tags)}
+          </div>
+        </div>
+      </div>
+      <div class="feat-strip">${items
+        .slice(0, 4)
+        .map((it, i) => `
+          <button class="gal-item" type="button" data-g="${gid}" data-i="${i}" aria-label="${esc(it.caption ? t(it.caption) : name)}">
+            <img class="gal-img" loading="lazy" src="${esc(it.src)}" alt="${esc(it.caption ? t(it.caption) : name)}">
+            ${i === 3 && items.length > 4 ? `<span class="gal-more">+${items.length - 4}</span>` : ""}
+          </button>`)
+        .join("")}</div>
+    </article>`;
+}
+
+// วิดีโอเล่นเองเมื่อเห็นการ์ดอย่างน้อย 35% (ไม่เล่นเองถ้าผู้ใช้ตั้งค่าลดการเคลื่อนไหว) — กดปุ่มเพื่อเล่น/หยุดเองได้
+let featObserver = null;
+function initFeaturedVideos() {
+  if (featObserver) featObserver.disconnect();
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  featObserver = new IntersectionObserver((entries) => {
+    entries.forEach((e) => {
+      const v = e.target.querySelector("video");
+      if (e.isIntersecting && e.intersectionRatio >= 0.35 && !e.target.dataset.userPaused && !reduce) v.play().catch(() => {});
+      else if (!e.isIntersecting || e.intersectionRatio < 0.35) v.pause();
+    });
+  }, { threshold: [0, 0.35] });
+  document.querySelectorAll(".feat-media").forEach((box) => {
+    const v = box.querySelector("video");
+    const sync = () => box.classList.toggle("playing", !v.paused);
+    v.addEventListener("play", sync);
+    v.addEventListener("pause", sync);
+    box.querySelector(".feat-toggle").addEventListener("click", () => {
+      if (v.paused) { delete box.dataset.userPaused; v.play().catch(() => {}); }
+      else { box.dataset.userPaused = "1"; v.pause(); }
+    });
+    featObserver.observe(box);
+  });
+}
+
 /* ---------- สไลด์โชว์ (ใช้กับการ์ดรางวัลเด่นที่มี 2 รูปขึ้นไป) ----------
    เลื่อนอัตโนมัติแบบวนลูป / หยุดเมื่อเอาเมาส์ชี้หรือโฟกัส / มีลูกศร, จุดบอกตำแหน่ง, ปัดนิ้วบนมือถือ
    ค่าเริ่มต้นของทุกกล่อง = เลื่อนทุก 3 วินาทีแบบสไลด์ — ตั้งค่าเฉพาะกล่องได้ที่ `slideshow` ของรางวัลนั้นใน data.js:
@@ -245,6 +319,7 @@ function render() {
   /* Projects */
   $("projList").innerHTML = RESUME.projects
     .map((pr) => {
+      if (pr.featured) return featuredHtml(pr);
       const title = esc(t(pr.title));
       // มีลิงก์ → ลิงก์ที่ชื่อโปรเจกต์ขยายคลุมทั้งการ์ด (รูปในแกลเลอรียังกดซูมได้ ไม่โดนลิงก์ทับ)
       const heading = pr.link
@@ -383,6 +458,7 @@ function render() {
   $("contactClose").setAttribute("aria-label", ui.close);
 
   initCarousels();
+  initFeaturedVideos();
 
   /* หน้าต่าง "ดาวน์โหลดเรซูเม": ไม่ปล่อยไฟล์ตรง ๆ → ข้อความขำ ๆ + ให้ขอทางอีเมล (ดึงอีเมลจาก RESUME.contact) */
   const emailItem = RESUME.contact.find((c) => c.key === "email");

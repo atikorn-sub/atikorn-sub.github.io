@@ -632,3 +632,73 @@ main { max-width: 980px; margin: 0 auto; padding: 0 16px; }
   .carousel.fade .car-slide { transition-duration: .01s; }
   .carousel.fade .car-slide.active .gal-img { transform: none; transition: none; }
 }
+
+/* ---------- Featured project (การ์ดเด่นเต็มแถว เช่น P Island) ----------
+   ขอบไล่สีม่วง → ชมพู → ฟ้า ให้เข้ากับแอป, วิดีโอซ้าย รายละเอียดขวา, แถบภาพด้านล่าง */
+.project-card.featured {
+  --feat-a: #8b5cf6; --feat-b: #ec4899; --feat-c: #22d3ee;
+  grid-column: 1 / -1;
+  border: 1px solid transparent;
+  background:
+    linear-gradient(var(--surface), var(--surface)) padding-box,
+    linear-gradient(120deg, var(--feat-a), var(--feat-b) 50%, var(--feat-c)) border-box;
+}
+.project-card.featured:hover {
+  transform: translateY(-3px); border-color: transparent;
+  box-shadow: var(--shadow), 0 0 44px color-mix(in srgb, var(--feat-a) 24%, transparent);
+}
+.featured .file-name { color: var(--purple); }
+.feat-grid { display: block; }
+.feat-media { position: relative; background: #09090b; border-bottom: 1px solid var(--border); }
+.feat-video { display: block; width: 100%; height: auto; aspect-ratio: 1216 / 640; }
+.feat-toggle {
+  position: absolute; right: 12px; bottom: 12px; z-index: 3;
+  width: 38px; height: 38px; border-radius: 50%; display: grid; place-items: center; cursor: pointer;
+  color: #fff; background: rgba(10, 10, 14, .55); border: 1px solid rgba(255, 255, 255, .22);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  transition: transform .15s, background .2s;
+}
+.feat-toggle:hover { transform: scale(1.08); background: rgba(10, 10, 14, .75); }
+.feat-toggle .i-pause, .feat-media.playing .feat-toggle .i-play { display: none; }
+.feat-media.playing .feat-toggle .i-pause { display: block; }
+.feat-body { padding: 24px 26px 26px; display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); gap: 28px; }
+.feat-col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+.feat-head { display: flex; align-items: center; gap: 14px; }
+.feat-icon { width: 56px; height: 56px; border-radius: 14px; box-shadow: 0 8px 22px rgba(0, 0, 0, .35); flex: none; }
+.feat-head h3 {
+  margin: 0; font-size: 1.45rem; letter-spacing: -.01em;
+  background: linear-gradient(120deg, var(--text) 30%, var(--feat-b) 75%, var(--feat-c));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.feat-tagline { margin: 2px 0 0; color: var(--muted); font-size: .92rem; }
+.feat-desc { margin: 0; color: var(--muted); }
+.feat-list { list-style: none; padding: 0; margin: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 8px 16px; font-size: .86rem; }
+.feat-list li { position: relative; padding-left: 20px; line-height: 1.45; }
+.feat-list li::before {
+  content: "✦"; position: absolute; left: 0; top: 0;
+  background: linear-gradient(120deg, var(--feat-a), var(--feat-b), var(--feat-c));
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.featured .tags { margin: 0; }
+.feat-links { display: flex; flex-wrap: wrap; gap: 10px; margin-top: auto; }
+.feat-links .btn.primary {
+  background: linear-gradient(120deg, var(--feat-a), var(--feat-b)); border-color: transparent; color: #fff;
+}
+.feat-links .btn.primary:hover { color: #fff; box-shadow: 0 8px 26px color-mix(in srgb, var(--feat-b) 35%, transparent); }
+.feat-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px;
+  background: var(--border); border-top: 1px solid var(--border); position: relative; z-index: 2;
+}
+.feat-strip .gal-item { aspect-ratio: 1520 / 600; }
+
+@media (max-width: 960px) {
+  .feat-body { grid-template-columns: 1fr; gap: 18px; padding: 18px 18px 20px; }
+}
+@media (max-width: 640px) {
+  .feat-list { grid-template-columns: 1fr; }
+  .feat-strip { grid-template-columns: repeat(2, 1fr); }
+  .feat-head h3 { font-size: 1.25rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project-card.featured:hover { transform: none; }
+}

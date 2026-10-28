@@ -21,7 +21,7 @@ const RESUME = {
       // ตาราง Expectations
       salary: "expected_salary", workType: "work_type", availableFrom: "available_from",
       roles: "interested_roles", note: "note",
-      perMonth: "/ month", negotiable: "negotiable", tbd: "TBD",
+      perMonth: "/ month", negotiable: "negotiable", tbd: "TBD", playPause: "Play or pause the video",
       copy: "Copy", copied: "Copied ✓", open: "Open", close: "Close",
       rowsAffected: (n) => `(${n} rows affected)`,
     },
@@ -39,7 +39,7 @@ const RESUME = {
       // ตาราง Expectations
       salary: "เงินเดือนที่คาดหวัง", workType: "รูปแบบการทำงาน", availableFrom: "เริ่มงานได้",
       roles: "ตำแหน่งที่สนใจ", note: "หมายเหตุ",
-      perMonth: "บาท / เดือน", negotiable: "ต่อรองได้", tbd: "แจ้งภายหลัง",
+      perMonth: "บาท / เดือน", negotiable: "ต่อรองได้", tbd: "แจ้งภายหลัง", playPause: "เล่นหรือหยุดวิดีโอ",
       copy: "คัดลอก", copied: "คัดลอกแล้ว ✓", open: "เปิด", close: "ปิด",
       rowsAffected: (n) => `(${n} rows affected)`,
     },
@@ -179,6 +179,43 @@ const RESUME = {
 
   /* ---------- ผลงาน / โปรเจค ---------- */
   projects: [
+    {
+      // featured: true = การ์ดใหญ่เต็มแถว มีวิดีโอเล่นเองเมื่อเลื่อนมาถึง + ไฮไลต์ + ปุ่มลิงก์ + แถบภาพ
+      featured: true,
+      file: "p-island.app",
+      title: { en: "P Island", th: "P Island" },
+      label: { en: "Open source · macOS · 2026", th: "โอเพนซอร์ส · macOS · 2569" },
+      tagline: { en: "A smart notch for your MacBook", th: "รอยบากอัจฉริยะสำหรับ MacBook" },
+      icon: "images/projects/p-island/icon.png",
+      video: "images/projects/p-island/promo.mp4",
+      poster: "images/projects/p-island/poster.jpg",
+      desc: {
+        en: "A native macOS app that turns the MacBook notch into a small, living control centre — like the iPhone's Dynamic Island. Designed, built and released as a personal open-source project, in Thai and English.",
+        th: "แอป macOS แบบ Native ที่เปลี่ยนรอยบากของ MacBook ให้เป็นศูนย์ควบคุมขนาดเล็กที่มีชีวิต คล้าย Dynamic Island ของ iPhone ออกแบบ พัฒนา และเผยแพร่เป็นโปรเจกต์โอเพนซอร์สส่วนตัว รองรับภาษาไทยและอังกฤษ",
+      },
+      highlights: [
+        { en: "Apple Music, Spotify & YouTube Music — Up Next and synced lyrics", th: "Apple Music, Spotify และ YouTube Music — รายการถัดไปและเนื้อเพลงวิ่งตามเพลง" },
+        { en: "Drop files on the notch: shelf, AirDrop, zip, shrink images", th: "ลากไฟล์มาที่รอยบาก: ชั้นวาง, AirDrop, zip, ย่อรูป" },
+        { en: "Live Activities: downloads, meeting countdown, camera & mic", th: "Live Activity: ดาวน์โหลด, นับถอยหลังก่อนประชุม, กล้องและไมค์" },
+        { en: "Timers, Pomodoro and a stopwatch on the notch", th: "ตัวจับเวลา, Pomodoro และนาฬิกาจับเวลาที่รอยบาก" },
+        { en: "Notifications with iMessage reply, quiet during Focus", th: "แจ้งเตือนพร้อมตอบ iMessage และเงียบเองตอนเปิด Focus" },
+        { en: "Black or Liquid Glass look, update alerts built in", th: "หน้าตาแบบดำหรือ Liquid Glass และแจ้งเตือนเวอร์ชันใหม่ในตัว" },
+      ],
+      tags: ["Swift", "SwiftUI", "AppKit", "Core Audio", "EventKit", "AVFoundation", "Network.framework", "Chrome Extension", "AI pair programming"],
+      images: [
+        { src: "images/projects/p-island/p-island-1.jpg", caption: { en: "Synced lyrics beside the player", th: "เนื้อเพลงวิ่งตามเพลงข้างตัวเล่นเพลง" } },
+        { src: "images/projects/p-island/p-island-2.jpg", caption: { en: "Drop zones: keep, AirDrop, zip, shrink", th: "ช่องวางไฟล์: เก็บ, AirDrop, zip, ย่อรูป" } },
+        { src: "images/projects/p-island/p-island-3.jpg", caption: { en: "Pomodoro", th: "Pomodoro" } },
+        { src: "images/projects/p-island/p-island-4.jpg", caption: { en: "Liquid Glass look", th: "หน้าตาแบบ Liquid Glass" } },
+        { src: "images/projects/p-island/p-island-5.jpg", caption: { en: "Home with Up Next", th: "หน้าหลักพร้อมรายการถัดไป" } },
+        { src: "images/projects/p-island/p-island-6.jpg", caption: { en: "Calendar, reminders & weather", th: "ปฏิทิน เตือนความจำ และสภาพอากาศ" } },
+        { src: "images/projects/p-island/p-island-7.jpg", caption: { en: "Several timers at once", th: "ตั้งตัวจับเวลาได้หลายตัวพร้อมกัน" } },
+      ],
+      links: [
+        { label: { en: "Download for Mac", th: "ดาวน์โหลดสำหรับ Mac" }, href: "https://github.com/atikorn-sub/P-Island#install", primary: true },
+        { label: { en: "Source on GitHub", th: "ซอร์สโค้ดบน GitHub" }, href: "https://github.com/atikorn-sub/P-Island" },
+      ],
+    },
     {
       file: "ngern-hai-jai.k2",
       title: { en: "Car Auction & Litigation Systems", th: "ระบบประมูลรถยนต์และดำเนินคดี" },
